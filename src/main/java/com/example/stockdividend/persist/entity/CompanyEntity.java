@@ -1,5 +1,6 @@
 package com.example.stockdividend.persist.entity;
 
+import com.example.stockdividend.model.Company;
 import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,8 @@ public class CompanyEntity {
 
     private String name;
 
+    public CompanyEntity(Company company){
+        this.ticker = company.getTicker();
+        this.name = company.getName();
+    }
 }
