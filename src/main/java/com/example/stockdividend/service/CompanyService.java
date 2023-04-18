@@ -1,5 +1,6 @@
 package com.example.stockdividend.service;
 
+import com.example.stockdividend.exception.impl.NoCompanyException;
 import com.example.stockdividend.model.Company;
 import com.example.stockdividend.model.ScrapedResult;
 import com.example.stockdividend.persist.CompanyRepository;
@@ -8,6 +9,7 @@ import com.example.stockdividend.persist.entity.CompanyEntity;
 import com.example.stockdividend.persist.entity.DividendEntity;
 import com.example.stockdividend.scraper.Scraper;
 import lombok.AllArgsConstructor;
+import lombok.var;
 import org.apache.commons.collections4.Trie;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -76,5 +78,15 @@ public class CompanyService {
 
     public void deleteAutocompleteKeyword(String keyword){
         this.trie.remove(keyword);
+    }
+
+    public String deleteCompany(String ticker){
+        var company = this.companyRepository.findByTicker(ticker)
+                .orElseThrow(()->new NoCompanyException());
+        this.dividendRepository.deleteAllByCompanyId(company.getId());
+        this.companyRepository.delete(company);
+
+        this.deleteAutocompleteKeyword(company.getName());
+        return company.getName();
     }
 }
