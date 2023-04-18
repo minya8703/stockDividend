@@ -8,7 +8,8 @@ public class Auth {
 
     @Data
     public static class SignIn{
-
+        private String username;
+        private String password;
 
     }
     @Data
